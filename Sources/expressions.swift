@@ -246,428 +246,431 @@ func notequal (_ lhs: Term, _ rhs: Term) -> Map {
 
 // Evaluation:
 
+/********************************* Arithmetic *********************************/
+
 func digit_sum (_ lhs: Term, _ rhs: Term, _ ans: Term, _ carry: Term) -> Goal {
    return
       /********************************* 0+x **********************************/
       // ----------------------
-      // sum(d0,d0) -EA-> <0,0>
+      // sum(d0,d0) -EA-> 0;0
       (lhs === toNumber(0) && rhs === toNumber(0) && ans === toNumber(0) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d1) -EA-> <0,1>
+      // sum(d0,d1) -EA-> 0;1
       (lhs === toNumber(0) && rhs === toNumber(1) && ans === toNumber(1) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d2) -EA-> <0,2>
+      // sum(d0,d2) -EA-> 0;2
       (lhs === toNumber(0) && rhs === toNumber(2) && ans === toNumber(2) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d3) -EA-> <0,3>
+      // sum(d0,d3) -EA-> 0;3
       (lhs === toNumber(0) && rhs === toNumber(3) && ans === toNumber(3) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d4) -EA-> <0,4>
+      // sum(d0,d4) -EA-> 0;4
       (lhs === toNumber(0) && rhs === toNumber(4) && ans === toNumber(4) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d5) -EA-> <0,5>
+      // sum(d0,d5) -EA-> 0;5
       (lhs === toNumber(0) && rhs === toNumber(5) && ans === toNumber(5) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d6) -EA-> <0,6>
+      // sum(d0,d6) -EA-> 0;6
       (lhs === toNumber(0) && rhs === toNumber(6) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d7) -EA-> <0,7>
+      // sum(d0,d7) -EA-> 0;7
       (lhs === toNumber(0) && rhs === toNumber(7) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d8) -EA-> <0,8>
+      // sum(d0,d8) -EA-> 0;8
       (lhs === toNumber(0) && rhs === toNumber(8) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d0,d9) -EA-> <0,9>
+      // sum(d0,d9) -EA-> 0;9
       (lhs === toNumber(0) && rhs === toNumber(9) && ans === toNumber(9) && carry === toNumber(0))
       ||
       /********************************* 1+x **********************************/
       // ----------------------
-      // sum(d1,d0) -EA-> <0,1>
+      // sum(d1,d0) -EA-> 0;1
       (lhs === toNumber(1) && rhs === toNumber(0) && ans === toNumber(1) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d1) -EA-> <0,2>
+      // sum(d1,d1) -EA-> 0;2
       (lhs === toNumber(1) && rhs === toNumber(1) && ans === toNumber(2) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d2) -EA-> <0,3>
+      // sum(d1,d2) -EA-> 0;3
       (lhs === toNumber(1) && rhs === toNumber(2) && ans === toNumber(3) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d3) -EA-> <0,4>
+      // sum(d1,d3) -EA-> 0;4
       (lhs === toNumber(1) && rhs === toNumber(3) && ans === toNumber(4) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d4) -EA-> <0,5>
+      // sum(d1,d4) -EA-> 0;5
       (lhs === toNumber(1) && rhs === toNumber(4) && ans === toNumber(5) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d5) -EA-> <0,6>
+      // sum(d1,d5) -EA-> 0;6
       (lhs === toNumber(1) && rhs === toNumber(5) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d6) -EA-> <0,7>
+      // sum(d1,d6) -EA-> 0;7
       (lhs === toNumber(1) && rhs === toNumber(6) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d7) -EA-> <0,8>
+      // sum(d1,d7) -EA-> 0;8
       (lhs === toNumber(1) && rhs === toNumber(7) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d8) -EA-> <0,9>
+      // sum(d1,d8) -EA-> 0;9
       (lhs === toNumber(1) && rhs === toNumber(8) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d1,d9) -EA-> <1,0>
+      // sum(d1,d9) -EA-> 1;0
       (lhs === toNumber(1) && rhs === toNumber(9) && ans === toNumber(0) && carry === toNumber(1))
       ||
       /********************************* 2+x **********************************/
       // ----------------------
-      // sum(d2,d0) -EA-> <0,2>
+      // sum(d2,d0) -EA-> 0;2
       (lhs === toNumber(2) && rhs === toNumber(0) && ans === toNumber(2) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d1) -EA-> <0,3>
+      // sum(d2,d1) -EA-> 0;3
       (lhs === toNumber(2) && rhs === toNumber(1) && ans === toNumber(3) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d2) -EA-> <0,4>
+      // sum(d2,d2) -EA-> 0;4
       (lhs === toNumber(2) && rhs === toNumber(2) && ans === toNumber(4) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d3) -EA-> <0,5>
+      // sum(d2,d3) -EA-> 0;5
       (lhs === toNumber(2) && rhs === toNumber(3) && ans === toNumber(5) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d4) -EA-> <0,6>
+      // sum(d2,d4) -EA-> 0;6
       (lhs === toNumber(2) && rhs === toNumber(4) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d5) -EA-> <0,7>
+      // sum(d2,d5) -EA-> 0;7
       (lhs === toNumber(2) && rhs === toNumber(5) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d6) -EA-> <0,8>
+      // sum(d2,d6) -EA-> 0;8
       (lhs === toNumber(2) && rhs === toNumber(6) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d7) -EA-> <0,9>
+      // sum(d2,d7) -EA-> 0;9
       (lhs === toNumber(2) && rhs === toNumber(7) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d2,d8) -EA-> <1,0>
+      // sum(d2,d8) -EA-> 1;0
       (lhs === toNumber(2) && rhs === toNumber(8) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d2,d9) -EA-> <1,1>
+      // sum(d2,d9) -EA-> 1;1
       (lhs === toNumber(2) && rhs === toNumber(9) && ans === toNumber(1) && carry === toNumber(1))
       ||
       /********************************* 3+x **********************************/
       // ----------------------
-      // sum(d3,d0) -EA-> <0,3>
+      // sum(d3,d0) -EA-> 0;3
       (lhs === toNumber(3) && rhs === toNumber(0) && ans === toNumber(3) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d1) -EA-> <0,4>
+      // sum(d3,d1) -EA-> 0;4
       (lhs === toNumber(3) && rhs === toNumber(1) && ans === toNumber(4) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d2) -EA-> <0,5>
+      // sum(d3,d2) -EA-> 0;5
       (lhs === toNumber(3) && rhs === toNumber(2) && ans === toNumber(5) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d3) -EA-> <0,6>
+      // sum(d3,d3) -EA-> 0;6
       (lhs === toNumber(3) && rhs === toNumber(3) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d4) -EA-> <0,7>
+      // sum(d3,d4) -EA-> 0;7
       (lhs === toNumber(3) && rhs === toNumber(4) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d5) -EA-> <0,8>
+      // sum(d3,d5) -EA-> 0;8
       (lhs === toNumber(3) && rhs === toNumber(5) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d6) -EA-> <0,9>
+      // sum(d3,d6) -EA-> 0;9
       (lhs === toNumber(3) && rhs === toNumber(6) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d3,d7) -EA-> <1,0>
+      // sum(d3,d7) -EA-> 1;0
       (lhs === toNumber(3) && rhs === toNumber(7) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d3,d8) -EA-> <1,1>
+      // sum(d3,d8) -EA-> 1;1
       (lhs === toNumber(3) && rhs === toNumber(8) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d3,d9) -EA-> <1,2>
+      // sum(d3,d9) -EA-> 1;2
       (lhs === toNumber(3) && rhs === toNumber(9) && ans === toNumber(2) && carry === toNumber(1))
       ||
       /********************************* 4+x **********************************/
       // ----------------------
-      // sum(d4,d0) -EA-> <0,4>
+      // sum(d4,d0) -EA-> 0;4
       (lhs === toNumber(4) && rhs === toNumber(0) && ans === toNumber(4) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d4,d1) -EA-> <0,5>
+      // sum(d4,d1) -EA-> 0;5
       (lhs === toNumber(4) && rhs === toNumber(1) && ans === toNumber(5) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d4,d2) -EA-> <0,6>
+      // sum(d4,d2) -EA-> 0;6
       (lhs === toNumber(4) && rhs === toNumber(2) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d4,d3) -EA-> <0,7>
+      // sum(d4,d3) -EA-> 0;7
       (lhs === toNumber(4) && rhs === toNumber(3) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d4,d4) -EA-> <0,8>
+      // sum(d4,d4) -EA-> 0;8
       (lhs === toNumber(4) && rhs === toNumber(4) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d4,d5) -EA-> <0,9>
+      // sum(d4,d5) -EA-> 0;9
       (lhs === toNumber(4) && rhs === toNumber(5) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d4,d6) -EA-> <1,0>
+      // sum(d4,d6) -EA-> 1;0
       (lhs === toNumber(4) && rhs === toNumber(6) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d4,d7) -EA-> <1,1>
+      // sum(d4,d7) -EA-> 1;1
       (lhs === toNumber(4) && rhs === toNumber(7) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d4,d8) -EA-> <1,2>
+      // sum(d4,d8) -EA-> 1;2
       (lhs === toNumber(4) && rhs === toNumber(8) && ans === toNumber(2) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d4,d9) -EA-> <1,3>
+      // sum(d4,d9) -EA-> 1;3
       (lhs === toNumber(4) && rhs === toNumber(9) && ans === toNumber(3) && carry === toNumber(1))
       ||
       /********************************* 5+x **********************************/
       // ----------------------
-      // sum(d5,d0) -EA-> <0,5>
+      // sum(d5,d0) -EA-> 0;5
       (lhs === toNumber(5) && rhs === toNumber(0) && ans === toNumber(5) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d5,d1) -EA-> <0,6>
+      // sum(d5,d1) -EA-> 0;6
       (lhs === toNumber(5) && rhs === toNumber(1) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d5,d2) -EA-> <0,7>
+      // sum(d5,d2) -EA-> 0;7
       (lhs === toNumber(5) && rhs === toNumber(2) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d5,d3) -EA-> <0,8>
+      // sum(d5,d3) -EA-> 0;8
       (lhs === toNumber(5) && rhs === toNumber(3) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d5,d4) -EA-> <0,9>
+      // sum(d5,d4) -EA-> 0;9
       (lhs === toNumber(5) && rhs === toNumber(4) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d5,d5) -EA-> <1,0>
+      // sum(d5,d5) -EA-> 1;0
       (lhs === toNumber(5) && rhs === toNumber(5) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d5,d6) -EA-> <1,1>
+      // sum(d5,d6) -EA-> 1;1
       (lhs === toNumber(5) && rhs === toNumber(6) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d5,d7) -EA-> <1,2>
+      // sum(d5,d7) -EA-> 1;2
       (lhs === toNumber(5) && rhs === toNumber(7) && ans === toNumber(2) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d5,d8) -EA-> <1,3>
+      // sum(d5,d8) -EA-> 1;3
       (lhs === toNumber(5) && rhs === toNumber(8) && ans === toNumber(3) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d5,d9) -EA-> <1,4>
+      // sum(d5,d9) -EA-> 1;4
       (lhs === toNumber(5) && rhs === toNumber(9) && ans === toNumber(4) && carry === toNumber(1))
       ||
       /********************************* 6+x **********************************/
       // ----------------------
-      // sum(d6,d0) -EA-> <0,6>
+      // sum(d6,d0) -EA-> 0;6
       (lhs === toNumber(6) && rhs === toNumber(0) && ans === toNumber(6) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d6,d1) -EA-> <0,7>
+      // sum(d6,d1) -EA-> 0;7
       (lhs === toNumber(6) && rhs === toNumber(1) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d6,d2) -EA-> <0,8>
+      // sum(d6,d2) -EA-> 0;8
       (lhs === toNumber(6) && rhs === toNumber(2) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d6,d3) -EA-> <0,9>
+      // sum(d6,d3) -EA-> 0;9
       (lhs === toNumber(6) && rhs === toNumber(3) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d6,d4) -EA-> <1,0>
+      // sum(d6,d4) -EA-> 1;0
       (lhs === toNumber(6) && rhs === toNumber(4) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d6,d5) -EA-> <1,1>
+      // sum(d6,d5) -EA-> 1;1
       (lhs === toNumber(6) && rhs === toNumber(5) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d6,d6) -EA-> <1,2>
+      // sum(d6,d6) -EA-> 1;2
       (lhs === toNumber(6) && rhs === toNumber(6) && ans === toNumber(2) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d6,d7) -EA-> <1,3>
+      // sum(d6,d7) -EA-> 1;3
       (lhs === toNumber(6) && rhs === toNumber(7) && ans === toNumber(3) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d6,d8) -EA-> <1,4>
+      // sum(d6,d8) -EA-> 1;4
       (lhs === toNumber(6) && rhs === toNumber(8) && ans === toNumber(4) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d6,d9) -EA-> <1,5>
+      // sum(d6,d9) -EA-> 1;5
       (lhs === toNumber(6) && rhs === toNumber(9) && ans === toNumber(5) && carry === toNumber(1))
       ||
       /********************************* 7+x **********************************/
       // ----------------------
-      // sum(d7,d0) -EA-> <0,7>
+      // sum(d7,d0) -EA-> 0;7
       (lhs === toNumber(7) && rhs === toNumber(0) && ans === toNumber(7) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d7,d1) -EA-> <0,8>
+      // sum(d7,d1) -EA-> 0;8
       (lhs === toNumber(7) && rhs === toNumber(1) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d7,d2) -EA-> <0,9>
+      // sum(d7,d2) -EA-> 0;9
       (lhs === toNumber(7) && rhs === toNumber(2) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d7,d3) -EA-> <1,0>
+      // sum(d7,d3) -EA-> 1;0
       (lhs === toNumber(7) && rhs === toNumber(3) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d7,d4) -EA-> <1,1>
+      // sum(d7,d4) -EA-> 1;1
       (lhs === toNumber(7) && rhs === toNumber(4) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d7,d5) -EA-> <1,2>
+      // sum(d7,d5) -EA-> 1;2
       (lhs === toNumber(7) && rhs === toNumber(5) && ans === toNumber(2) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d7,d6) -EA-> <1,3>
+      // sum(d7,d6) -EA-> 1;3
       (lhs === toNumber(7) && rhs === toNumber(6) && ans === toNumber(3) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d7,d7) -EA-> <1,4>
+      // sum(d7,d7) -EA-> 1;4
       (lhs === toNumber(7) && rhs === toNumber(7) && ans === toNumber(4) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d7,d8) -EA-> <1,5>
+      // sum(d7,d8) -EA-> 1;5
       (lhs === toNumber(7) && rhs === toNumber(8) && ans === toNumber(5) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d7,d9) -EA-> <1,6>
+      // sum(d7,d9) -EA-> 1;6
       (lhs === toNumber(7) && rhs === toNumber(9) && ans === toNumber(6) && carry === toNumber(1))
       ||
       /********************************* 8+x **********************************/
       // ----------------------
-      // sum(d8,d0) -EA-> <0,8>
+      // sum(d8,d0) -EA-> 0;8
       (lhs === toNumber(8) && rhs === toNumber(0) && ans === toNumber(8) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d8,d1) -EA-> <0,9>
+      // sum(d8,d1) -EA-> 0;9
       (lhs === toNumber(8) && rhs === toNumber(1) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d8,d2) -EA-> <1,0>
+      // sum(d8,d2) -EA-> 1;0
       (lhs === toNumber(8) && rhs === toNumber(2) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d3) -EA-> <1,1>
+      // sum(d8,d3) -EA-> 1;1
       (lhs === toNumber(8) && rhs === toNumber(3) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d4) -EA-> <1,2>
+      // sum(d8,d4) -EA-> 1;2
       (lhs === toNumber(8) && rhs === toNumber(4) && ans === toNumber(2) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d5) -EA-> <1,3>
+      // sum(d8,d5) -EA-> 1;3
       (lhs === toNumber(8) && rhs === toNumber(5) && ans === toNumber(3) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d6) -EA-> <1,4>
+      // sum(d8,d6) -EA-> 1;4
       (lhs === toNumber(8) && rhs === toNumber(6) && ans === toNumber(4) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d7) -EA-> <1,5>
+      // sum(d8,d7) -EA-> 1;5
       (lhs === toNumber(8) && rhs === toNumber(7) && ans === toNumber(5) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d8) -EA-> <1,6>
+      // sum(d8,d8) -EA-> 1;6
       (lhs === toNumber(8) && rhs === toNumber(8) && ans === toNumber(6) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d8,d9) -EA-> <1,7>
+      // sum(d8,d9) -EA-> 1;7
       (lhs === toNumber(8) && rhs === toNumber(9) && ans === toNumber(7) && carry === toNumber(1))
       ||
       /********************************* 9+x **********************************/
       // ----------------------
-      // sum(d9,d0) -EA-> <0,9>
+      // sum(d9,d0) -EA-> 0;9
       (lhs === toNumber(9) && rhs === toNumber(0) && ans === toNumber(9) && carry === toNumber(0))
       ||
       // ----------------------
-      // sum(d9,d1) -EA-> <1,0>
+      // sum(d9,d1) -EA-> 1;0
       (lhs === toNumber(9) && rhs === toNumber(1) && ans === toNumber(0) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d2) -EA-> <1,1>
+      // sum(d9,d2) -EA-> 1;1
       (lhs === toNumber(9) && rhs === toNumber(2) && ans === toNumber(1) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d3) -EA-> <1,2>
+      // sum(d9,d3) -EA-> 1;2
       (lhs === toNumber(9) && rhs === toNumber(3) && ans === toNumber(2) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d4) -EA-> <1,3>
+      // sum(d9,d4) -EA-> 1;3
       (lhs === toNumber(9) && rhs === toNumber(4) && ans === toNumber(3) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d5) -EA-> <1,4>
+      // sum(d9,d5) -EA-> 1;4
       (lhs === toNumber(9) && rhs === toNumber(5) && ans === toNumber(4) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d6) -EA-> <1,5>
+      // sum(d9,d6) -EA-> 1;5
       (lhs === toNumber(9) && rhs === toNumber(6) && ans === toNumber(5) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d7) -EA-> <1,6>
+      // sum(d9,d7) -EA-> 1;6
       (lhs === toNumber(9) && rhs === toNumber(7) && ans === toNumber(6) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d8) -EA-> <1,7>
+      // sum(d9,d8) -EA-> 1;7
       (lhs === toNumber(9) && rhs === toNumber(8) && ans === toNumber(7) && carry === toNumber(1))
       ||
       // ----------------------
-      // sum(d9,d9) -EA-> <1,8>
+      // sum(d9,d9) -EA-> 1;8
       (lhs === toNumber(9) && rhs === toNumber(9) && ans === toNumber(8) && carry === toNumber(1))
 }
+
 func sum_aux(_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
    return
       // lhs -EA-> nil, rhs -EA-> nil
       // ----------------------------
-      // lhs+rhs -EA-> nil
+      // sum(lhs,rhs) -EA-> nil
       (lhs === List.empty && rhs === List.empty && ans === temp)
       ||
       // lhs -EA-> H;u, rhs -EA-> nil
       // ----------------------------
-      // sum(lhs,rhs) -EA-> H+nil;u
+      // sum(lhs,rhs) -EA-> H;u
       (fresh{u in fresh{H in
          lhs === List.cons(u,H) && rhs === List.empty &&
          delayed(sum_aux (H, rhs, ans, List.cons(u,temp)))
@@ -675,15 +678,15 @@ func sum_aux(_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
       ||
       // rhs -EA-> H;u, lhs -EA-> nil
       // ----------------------------
-      // sum(lhs,rhs) -EA-> H+nil;u
+      // sum(lhs,rhs) -EA-> H;u
       (fresh{u in fresh{H in
          rhs === List.cons(u,H) && lhs === List.empty &&
          delayed(sum_aux (lhs, H, ans, List.cons(u,temp)))
       }})
       ||
-      // lhs -EA-> n1;u1, rhs -EA-> n2;u2, u1+u2 -EA-> r;res
-      // ---------------------------------------------------
-      // sum(lhs,rhs) -EA-> sum(sum(n1,r),n2);u1+u2
+      // lhs -EA-> n1;u1, rhs -EA-> n2;u2, sum(u1,u2) -EA-> r;res
+      // --------------------------------------------------------
+      // sum(lhs,rhs) -EA-> sum(sum(n1,r),n2);res
       (freshn{v in
          let n1 = v["n1"]
          let n2 = v["n2"]
@@ -693,10 +696,20 @@ func sum_aux(_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
          let res = v["res"]
          let inc = v["inc"]
          let rinc = v["rinc"]
+         let dig = v["dig"]
+         let rn1 = v["rn1"]
          return (
             lhs === List.cons(u1,n1) && rhs === List.cons(u2,n2) &&
-            digit_sum(u1,u2,res,r) && delayed(sum(n1,r,inc)) && reverse(inc,rinc) &&
-            delayed(sum_aux(rinc,n2,ans,List.cons(res,temp)))
+            digit_sum(List.cons(u1,List.empty),List.cons(u2,List.empty),res,r) &&
+            (
+               (r === toNumber(0) && rinc === n1) ||
+               (
+                  r === toNumber(1) && reverse(n1,rn1) &&
+                  delayed(sum(rn1,r,inc)) && reverse(inc,rinc)
+               )
+            ) &&
+            res === List.cons(dig,List.empty) &&
+            delayed(sum_aux(rinc,n2,ans,List.cons(dig,temp)))
          )
       })
 }
@@ -708,25 +721,31 @@ func sum(_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
       }}
 }
 
+func minus(_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
+   assert(false)
+}
+
 func evalArithmetic (input: Term, output: Term) -> Goal {
     assert (false)
 }
 
+/********************************** Booleans **********************************/
+
 func evalBoolean (input: Term, output: Term) -> Goal {
    return
       //
-      // --------------
-      // true -B-> true
+      // ---------------
+      // true -EB-> true
       (input === t && output === t)
       ||
       //
-      // ----------------
-      // false -B-> false
+      // -----------------
+      // false -EB-> false
       (input === f && output === f)
       ||
-      // b -B-> eb
-      // -----------------------
-      // not(b) -B-> not{Bool}eb
+      // b -EB-> eb
+      // ------------------------
+      // not(b) -EB-> not{Bool}eb
       delayed(freshn{v in
         let b = v ["b"]
         let eb = v ["eb"]
@@ -737,9 +756,9 @@ func evalBoolean (input: Term, output: Term) -> Goal {
         )
       })
       ||
-      // l -B-> el, r -B-> er
-      // ---------------------------
-      // and(l,r) -B-> l and{Bool} r
+      // l -EB-> el, r -EB-> er
+      // ----------------------------
+      // and(l,r) -EB-> l and{Bool} r
       delayed(freshn{v in
         let l = v ["l"]
         let r = v ["r"]
@@ -756,9 +775,9 @@ func evalBoolean (input: Term, output: Term) -> Goal {
             )
       })
       ||
-      // l -B-> el, r -B-> er
-      // -------------------------
-      // or(l,r) -B-> l or{Bool} r
+      // l -EB-> el, r -EB-> er
+      // --------------------------
+      // or(l,r) -EB-> l or{Bool} r
       delayed(freshn{v in
         let l = v ["l"]
         let r = v ["r"]
@@ -775,9 +794,9 @@ func evalBoolean (input: Term, output: Term) -> Goal {
             )
       })
       ||
-      // l -B-> el, r -B-> er
-      // ------------------------------
-      // implies(l,r) -B-> l =>{Bool} r
+      // l -EB-> el, r -EB-> er
+      // -------------------------------
+      // implies(l,r) -EB-> l =>{Bool} r
       delayed(freshn{v in
         let l = v ["l"]
         let r = v ["r"]
@@ -795,8 +814,243 @@ func evalBoolean (input: Term, output: Term) -> Goal {
       })
 }
 
+/******************************** Comparisons *********************************/
+
+func eq (_ lhs: Term, _ rhs: Term) -> Goal {
+   return
+      // t -EA-> n, t' -EA-> n', n =={N} n'
+      // ----------------------------------
+      // eq(t,t') -R-> true
+      (lhs === rhs)
+}
+
+func digit_neq (_ lhs: Term, _ rhs: Term) -> Goal {
+   return
+      // 0
+      (lhs === d0 && rhs === d1) ||
+      (lhs === d0 && rhs === d2) ||
+      (lhs === d0 && rhs === d3) ||
+      (lhs === d0 && rhs === d4) ||
+      (lhs === d0 && rhs === d5) ||
+      (lhs === d0 && rhs === d6) ||
+      (lhs === d0 && rhs === d7) ||
+      (lhs === d0 && rhs === d8) ||
+      (lhs === d0 && rhs === d9) ||
+      // 1
+      (lhs === d1 && rhs === d0) ||
+      (lhs === d1 && rhs === d2) ||
+      (lhs === d1 && rhs === d3) ||
+      (lhs === d1 && rhs === d4) ||
+      (lhs === d1 && rhs === d5) ||
+      (lhs === d1 && rhs === d6) ||
+      (lhs === d1 && rhs === d7) ||
+      (lhs === d1 && rhs === d8) ||
+      (lhs === d1 && rhs === d9) ||
+      // 2
+      (lhs === d2 && rhs === d0) ||
+      (lhs === d2 && rhs === d1) ||
+      (lhs === d2 && rhs === d3) ||
+      (lhs === d2 && rhs === d4) ||
+      (lhs === d2 && rhs === d5) ||
+      (lhs === d2 && rhs === d6) ||
+      (lhs === d2 && rhs === d7) ||
+      (lhs === d2 && rhs === d8) ||
+      (lhs === d2 && rhs === d9) ||
+      // 3
+      (lhs === d3 && rhs === d0) ||
+      (lhs === d3 && rhs === d1) ||
+      (lhs === d3 && rhs === d2) ||
+      (lhs === d3 && rhs === d4) ||
+      (lhs === d3 && rhs === d5) ||
+      (lhs === d3 && rhs === d6) ||
+      (lhs === d3 && rhs === d7) ||
+      (lhs === d3 && rhs === d8) ||
+      (lhs === d3 && rhs === d9) ||
+      // 4
+      (lhs === d4 && rhs === d0) ||
+      (lhs === d4 && rhs === d1) ||
+      (lhs === d4 && rhs === d2) ||
+      (lhs === d4 && rhs === d3) ||
+      (lhs === d4 && rhs === d5) ||
+      (lhs === d4 && rhs === d6) ||
+      (lhs === d4 && rhs === d7) ||
+      (lhs === d4 && rhs === d8) ||
+      (lhs === d4 && rhs === d9) ||
+      // 5
+      (lhs === d5 && rhs === d0) ||
+      (lhs === d5 && rhs === d1) ||
+      (lhs === d5 && rhs === d2) ||
+      (lhs === d5 && rhs === d3) ||
+      (lhs === d5 && rhs === d4) ||
+      (lhs === d5 && rhs === d6) ||
+      (lhs === d5 && rhs === d7) ||
+      (lhs === d5 && rhs === d8) ||
+      (lhs === d5 && rhs === d9) ||
+      // 6
+      (lhs === d6 && rhs === d0) ||
+      (lhs === d6 && rhs === d1) ||
+      (lhs === d6 && rhs === d2) ||
+      (lhs === d6 && rhs === d3) ||
+      (lhs === d6 && rhs === d4) ||
+      (lhs === d6 && rhs === d5) ||
+      (lhs === d6 && rhs === d7) ||
+      (lhs === d6 && rhs === d8) ||
+      (lhs === d6 && rhs === d9) ||
+      // 7
+      (lhs === d7 && rhs === d0) ||
+      (lhs === d7 && rhs === d1) ||
+      (lhs === d7 && rhs === d2) ||
+      (lhs === d7 && rhs === d3) ||
+      (lhs === d7 && rhs === d4) ||
+      (lhs === d7 && rhs === d5) ||
+      (lhs === d7 && rhs === d6) ||
+      (lhs === d7 && rhs === d8) ||
+      (lhs === d7 && rhs === d9) ||
+      // 8
+      (lhs === d8 && rhs === d0) ||
+      (lhs === d8 && rhs === d1) ||
+      (lhs === d8 && rhs === d2) ||
+      (lhs === d8 && rhs === d3) ||
+      (lhs === d8 && rhs === d4) ||
+      (lhs === d8 && rhs === d5) ||
+      (lhs === d8 && rhs === d6) ||
+      (lhs === d8 && rhs === d7) ||
+      (lhs === d8 && rhs === d9) ||
+      // 9
+      (lhs === d9 && rhs === d0) ||
+      (lhs === d9 && rhs === d1) ||
+      (lhs === d9 && rhs === d2) ||
+      (lhs === d9 && rhs === d3) ||
+      (lhs === d9 && rhs === d4) ||
+      (lhs === d9 && rhs === d5) ||
+      (lhs === d9 && rhs === d6) ||
+      (lhs === d9 && rhs === d7) ||
+      (lhs === d9 && rhs === d8)
+}
+func neq (_ lhs: Term, _ rhs: Term) -> Goal {
+   return
+      freshn{v in
+         let l = v["l"]
+         let L = v["L"]
+         let r = v["r"]
+         let R = v["R"]
+         return
+            // lhs -EA-> nil, rhs -EA-> r;R
+            // ----------------------------
+            // neq(lhs,rhs) -R-> true
+            (lhs === List.empty && rhs === List.cons(r,R))
+            ||
+            // lhs -EA-> l;L, rhs -EA-> nil
+            // ----------------------------
+            // neq(lhs,rhs) -R-> true
+            (lhs === List.cons(l,L) && rhs === List.empty)
+            ||
+            // lhs -EA-> l;L, rhs -EA-> r;R, l !={N} r
+            // ---------------------------------------
+            // neq(lhs,rhs) -R-> true
+            //
+            // lhs -EA-> l;L, rhs -EA-> r;R, l =={N} r
+            // ---------------------------------------
+            // neq(lhs,rhs) -R-> neq(L,R)
+            (lhs === List.cons(l,L) && rhs === List.cons(r,R))
+            &&
+            (
+               digit_neq(l,r) ||
+               (eq(l,r) && delayed(neq(L,R)))
+            )
+      }
+}
+
+func lt_aux (_ lhs: Term, _ rhs: Term, _ count: Term) -> Goal {
+   return
+      // eq(c,t) -R-> true
+      // ------------------------
+      // lt_aux(t,t',c) -R-> true
+      eq(count,lhs)
+      ||
+      // neq(c,t) -R-> true, neq(c,t') -R-> true
+      // -----------------------------------------
+      // lt_aux(t,t',c) -R-> lt_aux(t,t',sum(c,1))
+      (
+         neq(count,lhs) && neq(count,rhs) &&
+         fresh{x in
+            sum(count,toNumber(1),x) &&
+            delayed(lt_aux(lhs,rhs,x))
+         }
+      )
+}
+func lt (_ lhs: Term, _ rhs: Term) -> Goal {
+   // neq(t,t') -R-> true
+   // ----------------------------
+   // lt(t,t') -R-> lt_aux(t,t',0)
+   //
+   // neq(t,t') -R-> false
+   // --------------------
+   // lt(t,t') -R-> false
+   return neq(lhs,rhs) && lt_aux(lhs, rhs, toNumber(0))
+}
+
+func loet (_ lhs: Term, _ rhs: Term) -> Goal {
+   return lt_aux(lhs, rhs, toNumber(0))
+}
+
 func evalComparison (input: Term, output: Term) -> Goal {
-    assert (false)
+    return
+      fresh{l in fresh{r in
+         // ==
+         (
+            input === equal(l,r) &&
+            (
+               (eq(l,r) && output === t) ||
+               (neq(l,r) && output === f)
+            )
+         )
+         ||
+         // !=
+         (
+            input === notequal(l,r) &&
+            (
+               (eq(l,r) && output === f) ||
+               (neq(l,r) && output === t)
+            )
+         )
+         ||
+         // <
+         (
+            input === lessthan(l,r) &&
+            (
+               (lt(l,r) && output === t) ||
+               (loet(r,l) && output === f)
+            )
+         )
+         ||
+         // <=
+         (
+            input === lessequal(l,r) &&
+            (
+               (loet(l,r) && output === t) ||
+               (lt(r,l) && output === f)
+            )
+         )
+         ||
+         // >
+         (
+            input === greaterthan(l,r) &&
+            (
+               (lt(r,l) && output === t) ||
+               (loet(l,r) && output === f)
+            )
+         )
+         ||
+         // >=
+         (
+            input === greaterequal(l,r) &&
+            (
+               (loet(r,l) && output === t) ||
+               (lt(l,r) && output === f)
+            )
+         )
+      }}
 }
 
 // Main evaluation:
