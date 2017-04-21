@@ -41,6 +41,20 @@ let d7 = Value (7)
 let d8 = Value (8)
 let d9 = Value (9)
 
+func isdigit (_ d: Term) -> Goal {
+   return
+      d === d0 ||
+      d === d1 ||
+      d === d2 ||
+      d === d3 ||
+      d === d4 ||
+      d === d5 ||
+      d === d6 ||
+      d === d7 ||
+      d === d8 ||
+      d === d9
+}
+
 // d in Digits
 // -------------------
 // cons(d,empty) in EA
@@ -77,6 +91,12 @@ func toNumber (_ n : Int) -> Term {
         }
     }
     return result
+}
+
+func isnumber (_ n: Term) -> Goal {
+   return   fresh{d in fresh{L in
+               n === List.cons(d,L) && isdigit(d)
+            }}
 }
 
 // Arithmetic:
@@ -661,7 +681,7 @@ func digit_sum (_ lhs: Term, _ rhs: Term, _ ans: Term, _ carry: Term) -> Goal {
       (lhs === toNumber(9) && rhs === toNumber(9) && ans === toNumber(8) && carry === toNumber(1))
 }
 
-func sum_aux(_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
+func sum_aux (_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
    return
       // lhs -EA-> nil, rhs -EA-> nil
       // ----------------------------
@@ -713,7 +733,7 @@ func sum_aux(_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
          )
       })
 }
-func sum(_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
+func sum (_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
    return
       fresh{l in fresh{r in
          reverse(lhs, l) && reverse(rhs, r) &&
@@ -721,12 +741,101 @@ func sum(_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
       }}
 }
 
-func minus(_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
-   assert(false)
+func minus_aux (_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
+   return
+      fresh{x in
+         sum(rhs,temp,x) &&
+         (
+            (x === lhs && ans === temp) ||
+            (
+               neq(x,lhs) &&
+               fresh{y in
+                  sum(temp,toNumber(1),y) &&
+                  delayed(minus_aux(lhs,rhs,ans,y))
+               }
+            )
+         )
+      }
+}
+func minus (_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
+   return
+      // lhs -EA-> n, rhs -EA-> n', loet(n',n), sum(n",n') -EA-> n
+      // ---------------------------------------------------------
+      // minus(lhs,rhs) -EA-> n"
+      loet(rhs,lhs) && minus_aux(lhs,rhs,ans,toNumber(0))
+}
+
+func prod_aux (_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
+   return
+      // lhs -EA-> n, rhs -EA-> 0
+      // ------------------------
+      // prod(lhs,rhs) -EA-> 0
+      (rhs === toNumber(0) && ans === temp)
+      ||
+      // lhs -EA-> n, rhs -EA-> n'
+      // -----------------------------------------------
+      // prod(lhs,rhs) -EA-> sum(n, prod(n,minus(n',1)))
+      (
+         fresh{x in fresh{y in
+            sum(temp,lhs,x) && minus(rhs,toNumber(1),y) &&
+            delayed(prod_aux(lhs,y,ans,x))
+         }}
+      )
+}
+func prod (_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
+   return
+      prod_aux(lhs,rhs,ans,toNumber(0))
+}
+
+func div_aux(_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
+   return
+      fresh{x in
+         prod(rhs,temp,x) &&
+         (
+            (x === lhs && ans === temp) ||
+            (lt(lhs,x) && minus(temp,toNumber(1),ans)) ||
+            (
+               lt(x,lhs) &&
+               fresh{y in
+                  sum(temp,toNumber(1),y) &&
+                  delayed(div_aux(lhs,rhs,ans,y))
+               }
+            )
+         )
+      }
+}
+func div (_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
+   return
+      // lhs -EA-> n, rhs -EA-> n', prod(n',n") -EA-> n
+      // ----------------------------------------------
+      // div(lhs,rhs) -EA-> n"
+      //
+      // lhs -EA-> n, rhs -EA-> n', prod(n',n") -EA-> r, lt(r,n),
+      // prod(n',sum(n",1)) -EA-> r', lt(n,r')
+      // --------------------------------------------------------------
+      // div(lhs,rhs) -EA-> n"
+      div_aux(lhs,rhs,ans,toNumber(0))
 }
 
 func evalArithmetic (input: Term, output: Term) -> Goal {
-    assert (false)
+    return
+      // ---------
+      // n -EA-> n
+      (isnumber(input) && output === input)
+      ||
+      fresh{l in fresh{r in
+         // +
+         (input === add(l,r) && sum(l,r,output))
+         ||
+         // -
+         (input === subtract(l,r) && minus(l,r,output))
+         ||
+         // *
+         (input === multiply(l,r) && prod(l,r,output))
+         ||
+         // /
+         (input === divide(l,r) && div(l,r,output))
+      }}
 }
 
 /********************************** Booleans **********************************/
@@ -1053,8 +1162,84 @@ func evalComparison (input: Term, output: Term) -> Goal {
       }}
 }
 
+/***** Helper eval functions (because Swift couldn't handle long returns) *****/
+
+func arithmetic_aux (input: Term, output: Term) -> Goal {
+   return
+      fresh{l in fresh{r in fresh{ein in
+         (
+            (
+               (isnumber(input) && ein === input)
+               ||
+               fresh{el in fresh{er in fresh{op in
+                  input === Map(["op": op, "lhs": l, "rhs": r]) &&
+                  delayed(eval(input: l, output: el)) &&
+                  delayed(eval(input: r, output: er)) &&
+                  (op === Value("+") || op === Value("-") ||
+                  op === Value("*") || op === Value("/")) &&
+                  ein === Map(["op": op, "lhs": el, "rhs": er])
+               }}}
+            ) &&
+            evalArithmetic(input: ein, output: output)
+         )
+      }}}
+}
+
+func logic_aux (input: Term, output: Term) -> Goal {
+   return
+      fresh{l in fresh{r in fresh{ein in
+         (
+            (
+               ((input === t || input === f) && ein === input)
+               ||
+               fresh{el in fresh{op in
+                  input === Map(["op": Value("¬"), "of": l]) &&
+                  delayed(eval(input: l, output: el)) &&
+                  ein === not(el)
+               }}
+               ||
+               fresh{el in fresh{er in fresh{op in
+                  input === Map(["op": op, "lhs": l, "rhs": r]) &&
+                  delayed(eval(input: l, output: el)) &&
+                  delayed(eval(input: r, output: er)) &&
+                  (op === Value("∧") || op === Value("∨") ||
+                  op === Value("=>")) &&
+                  ein === Map(["op": op, "lhs": el, "rhs": er])
+               }}}
+            ) &&
+            evalBoolean(input: ein, output: output)
+         )
+      }}}
+}
+
+func relation_aux (input: Term, output: Term) -> Goal {
+   return
+      fresh{l in fresh{r in fresh{ein in
+         (
+            fresh{el in fresh{er in fresh{op in
+               input === Map(["op": op, "lhs": l, "rhs": r]) &&
+               delayed(eval(input: l, output: el)) &&
+               delayed(eval(input: r, output: er)) &&
+               (op === Value("==") || op === Value("!=") ||
+               op === Value("<") || op === Value("≤") ||
+               op === Value(">") || op === Value("≥")) &&
+               ein === Map(["op": op, "lhs": el, "rhs": er]) &&
+               evalComparison(input: ein, output: output)
+            }}}
+         )
+      }}}
+}
+
 // Main evaluation:
 
 func eval (input: Term, output: Term) -> Goal {
-    assert (false)
+    return
+      // Arithmetic
+      arithmetic_aux(input: input, output: output)
+      ||
+      // Logic
+      logic_aux(input: input, output: output)
+      ||
+      // Relation
+      relation_aux(input: input, output: output)
 }
