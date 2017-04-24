@@ -13,7 +13,8 @@ class expressionsTests: XCTestCase {
       // let I = Variable(named: "I")
       // let J = Variable(named: "J")
       // let expected : Term = List.cons (Value (5), List.cons (Value (2), List.empty))
-      let prob = eval(input: and(t,lessthan(add(toNumber(20),toNumber(2)),subtract(toNumber(27),toNumber(4)))), output: V)
+      // let prob = eval(input: and(t,lessthan(add(toNumber(20),toNumber(2)),subtract(toNumber(27),toNumber(4)))), output: V)
+      let prob = eval(input: and(t, or(t,f)), output: V)
       // var counter = 0
       for sol in solve(prob) {
          print(sol.reified()[V])
