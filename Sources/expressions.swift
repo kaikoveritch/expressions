@@ -282,7 +282,7 @@ func notequal (_ lhs: Term, _ rhs: Term) -> Map {
 //==============================================================================
 // The specialized evaluations (for an operation, or a category) always work
 // supposing that its operands are already evaluated. The evaluation of the
-// operands is made in the general eval function in order to keep flexibility.
+// operands is made in the general eval function in order to conserve flexibility.
 // (for instance, a boolean in a logic operation might be gotten from a Relation
 // evaluation and not from evalBoolean.)
 
@@ -701,9 +701,10 @@ func sum_aux (_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
       // each, get their digit_sum, add the main result to the accumulator and
       // sum the carry (if not 0) to the rest of lhs to call sum_aux recursively.
       //
-      // lhs -EA-> n1;u1, rhs -EA-> n2;u2, sum(u1,u2) -EA-> r;res
+      // lhs -EA-> n1;u1, rhs -EA-> n2;u2, sum(u1,u2) -EA-> r;res,
+      // sum(n1,r) -EA-> inc, sum(inc,n2) -EA-> N
       // --------------------------------------------------------
-      // sum(lhs,rhs) -EA-> sum(sum(n1,r),n2);res
+      // sum(lhs,rhs) -EA-> N;res
       (freshn{v in
          let n1 = v["n1"]
          let n2 = v["n2"]
@@ -780,9 +781,9 @@ func minus (_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
       // solution. This "forces" the evaluation to go sequentially but
       // effectively works like the description below. (sorry, long explanation)
       //
-      // lhs -EA-> n, rhs -EA-> n', loet(n',n), sum(n",n') -EA-> n
+      // loet(lhs,rhs), sum(n,rhs) -EA-> lhs
       // ---------------------------------------------------------
-      // minus(lhs,rhs) -EA-> n"
+      // minus(lhs,rhs) -EA-> n
       loet(rhs,lhs) && minus_aux(lhs,rhs,ans,toNumber(0))
 }
 
@@ -794,16 +795,16 @@ func prod_aux (_ lhs: Term, _ rhs: Term, _ ans: Term, _ temp: Term) -> Goal {
    return
       // If rhs is 0, temp is the solution.
       //
-      // lhs -EA-> n, rhs -EA-> 0
-      // ------------------------
+      // rhs -EA-> 0
+      // ---------------------
       // prod(lhs,rhs) -EA-> 0
       (rhs === toNumber(0) && ans === temp)
       ||
       // Else, we sum lhs to temp and decrement rhs to call prod_aux recursively
       //
-      // lhs -EA-> n, rhs -EA-> n'
-      // -----------------------------------------------
-      // prod(lhs,rhs) -EA-> sum(n, prod(n,minus(n',1)))
+      // minus(rhs,1) -EA-> y, prod(lhs,y) -EA-> s, sum(lhs,s) -EA-> x
+      // ------------------------------------------------------------------
+      // prod(lhs,rhs) -EA-> x
       (
          fresh{x in fresh{y in
             sum(temp,lhs,x) && minus(rhs,toNumber(1),y) &&
@@ -849,14 +850,13 @@ func div (_ lhs: Term, _ rhs: Term, _ ans: Term) -> Goal {
       // Works with the same idea as the subtraction evaluation. We can either
       // have an natural number which is an exact solution, or round down to one.
       //
-      // lhs -EA-> n, rhs -EA-> n', prod(n',n") -EA-> n
-      // ----------------------------------------------
-      // div(lhs,rhs) -EA-> n"
+      // prod(rhs,n) -EA-> lhs
+      // ---------------------
+      // div(lhs,rhs) -EA-> n
       //
-      // lhs -EA-> n, rhs -EA-> n', prod(n',n") -EA-> r, lt(r,n),
-      // prod(n',sum(n",1)) -EA-> r', lt(n,r')
-      // --------------------------------------------------------
-      // div(lhs,rhs) -EA-> n"
+      // prod(rhs,n) -EA-> r, lt(r,lhs), prod(rhs,sum(n,1)) -EA-> r', lt(lhs,r')
+      // -----------------------------------------------------------------------
+      // div(lhs,rhs) -EA-> n
       div_aux(lhs,rhs,ans,toNumber(0))
 }
 
@@ -870,20 +870,24 @@ func evalArithmetic (input: Term, output: Term) -> Goal {
       (isnumber(input) && output === input)
       ||
       fresh{l in fresh{r in
-         // -----------------------
-         // add(l,r) -EA-> sum(l,r)
+         // sum(l,r) -EA-> s
+         // ----------------
+         // add(l,r) -EA-> s
          (input === add(l,r) && sum(l,r,output))
          ||
-         // ------------------------------
-         // subtract(l,r) -EA-> minus(l,r)
+         // minus(l,r) -EA-> s
+         // ---------------------
+         // subtract(l,r) -EA-> s
          (input === subtract(l,r) && minus(l,r,output))
          ||
-         // -----------------------------
-         // multiply(l,r) -EA-> prod(l,r)
+         // prod(l,r) -EA-> s
+         // ---------------------
+         // multiply(l,r) -EA-> s
          (input === multiply(l,r) && prod(l,r,output))
          ||
-         // --------------------------
-         // divide(l,r) -EA-> div(l,r)
+         // div(l,r) -EA-> s
+         // -------------------
+         // divide(l,r) -EA-> s
          (input === divide(l,r) && div(l,r,output))
       }}
 }
@@ -1142,9 +1146,9 @@ func neq (_ lhs: Term, _ rhs: Term) -> Goal {
             // ---------------------------------------
             // neq(lhs,rhs) -R-> true
             //
-            // lhs -EA-> l;L, rhs -EA-> r;R, l =={N} r
-            // ---------------------------------------
-            // neq(lhs,rhs) -R-> neq(L,R)
+            // lhs -EA-> l;L, rhs -EA-> r;R, l =={N} r, neq(L,R) -EB-> b
+            // ---------------------------------------------------------
+            // neq(lhs,rhs) -R-> b
             (lhs === List.cons(l,L) && rhs === List.cons(r,R))
             &&
             (
@@ -1161,17 +1165,18 @@ func lt_aux (_ lhs: Term, _ rhs: Term, _ count: Term) -> Goal {
    return
       // If the counter has reached lhs, lhs is inferior or equal to rhs
       //
-      // eq(c,t) -R-> true
+      // eq(c,l) -R-> true
       // ------------------------
-      // lt_aux(t,t',c) -R-> true
+      // lt_aux(l,r,c) -R-> true
       eq(count,lhs)
       ||
       // If the counter has not yet reached either lhs or rhs, we increment it
       // to call lt_aux recursively.
       //
-      // neq(c,t) -R-> true, neq(c,t') -R-> true
-      // -----------------------------------------
-      // lt_aux(t,t',c) -R-> lt_aux(t,t',sum(c,1))
+      // neq(c,l) -R-> true, neq(c,r) -R-> true,
+      // sum(c,1) -EA-> x, lt_aux(l,r,x) -EA-> b
+      // ---------------------------------------
+      // lt_aux(l,r,c) -R-> b
       (
          neq(count,lhs) && neq(count,rhs) &&
          fresh{x in
@@ -1186,19 +1191,23 @@ func lt (_ lhs: Term, _ rhs: Term) -> Goal {
    // We use lt_aux to check if lhs is inferior or equal to rhs, but also verify
    // that they are not equal.
    //
-   // neq(t,t') -R-> true
-   // ----------------------------
-   // lt(t,t') -R-> lt_aux(t,t',0)
+   // neq(l,r) -R-> true, lt_aux(l,r,0) -EA-> b
+   // -----------------------------------------
+   // lt(lhs,rhs) -R-> b
    //
-   // neq(t,t') -R-> false
+   // neq(l,r) -R-> false
    // --------------------
-   // lt(t,t') -R-> false
+   // lt(l,r) -R-> false
    return neq(lhs,rhs) && lt_aux(lhs, rhs, toNumber(0))
 }
 
 // inferior or equal check function
 func loet (_ lhs: Term, _ rhs: Term) -> Goal {
    // We use lt_aux to check if lhs is inferior or equal to rhs.
+   //
+   // lt_aux(l,r,0) -EA-> b
+   // ---------------------
+   // loet(lhs,rhs) -R-> b
    return lt_aux(lhs, rhs, toNumber(0))
 }
 
