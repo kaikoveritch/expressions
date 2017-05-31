@@ -869,27 +869,39 @@ func evalArithmetic (input: Term, output: Term) -> Goal {
       // n -EA-> n
       (isnumber(input) && output === input)
       ||
-      fresh{l in fresh{r in
+      delayed(fresh{l in fresh{r in fresh{el in fresh{er in
          // sum(l,r) -EA-> s
          // ----------------
          // add(l,r) -EA-> s
-         (input === add(l,r) && sum(l,r,output))
+         (input === add(l,r) &&
+         evalArithmetic(input: l, output: el) &&
+         evalArithmetic(input: r, output: er) &&
+         sum(el,er,output))
          ||
          // minus(l,r) -EA-> s
          // ---------------------
          // subtract(l,r) -EA-> s
-         (input === subtract(l,r) && minus(l,r,output))
+         (input === subtract(l,r) &&
+         evalArithmetic(input: l, output: el) &&
+         evalArithmetic(input: r, output: er) &&
+         minus(el,er,output))
          ||
          // prod(l,r) -EA-> s
          // ---------------------
          // multiply(l,r) -EA-> s
-         (input === multiply(l,r) && prod(l,r,output))
+         (input === multiply(l,r) &&
+         evalArithmetic(input: l, output: el) &&
+         evalArithmetic(input: r, output: er) &&
+         prod(el,er,output))
          ||
          // div(l,r) -EA-> s
          // -------------------
          // divide(l,r) -EA-> s
-         (input === divide(l,r) && div(l,r,output))
-      }}
+         (input === divide(l,r) &&
+         evalArithmetic(input: l, output: el) &&
+         evalArithmetic(input: r, output: er) &&
+         div(el,er,output))
+      }}}})
 }
 
 /********************************** Booleans **********************************/
@@ -914,16 +926,18 @@ func evalBoolean (input: Term, output: Term) -> Goal {
       // Not
       delayed(freshn{v in
         let b = v ["b"]
+        let eb = v ["eb"]
         return (
             input === not(b) &&
+            evalBoolean(input: b, output: eb) &&
             // b -EB-> t
             // --------------
             // not(b) -EB-> f
-            ((b === t && output === f) ||
+            ((eb === t && output === f) ||
             // b -EB-> f
             // --------------
             // not(b) -EB-> t
-            (b === f && output === t))
+            (eb === f && output === t))
         )
       })
       ||
@@ -931,21 +945,25 @@ func evalBoolean (input: Term, output: Term) -> Goal {
       delayed(freshn{v in
         let l = v ["l"]
         let r = v ["r"]
+        let el = v ["el"]
+        let er = v ["er"]
         return
             (input === and(l, r)) &&
+            evalBoolean(input:l, output: el) &&
+            evalBoolean(input:r, output: er) &&
             (
                // l -EB-> t, r -EB-> t
                // --------------------
                // and(l,r) -EB-> t
-               (l === t && r === t && output === t) ||
+               (el === t && er === t && output === t) ||
                // l -EB-> f
                // ----------------
                // and(l,r) -EB-> f
-               (l === f && output === f) ||
+               (el === f && output === f) ||
                // r -EB-> f
                // ----------------
                // and(l,r) -EB-> f
-               (r === f && output === f)
+               (er === f && output === f)
             )
       })
       ||
@@ -953,21 +971,25 @@ func evalBoolean (input: Term, output: Term) -> Goal {
       delayed(freshn{v in
         let l = v ["l"]
         let r = v ["r"]
+        let el = v ["el"]
+        let er = v ["er"]
         return
             (input === or(l, r)) &&
+            evalBoolean(input:l, output: el) &&
+            evalBoolean(input:r, output: er) &&
             (
                // l -EB-> f, r -EB-> f
                // --------------------
                // and(l,r) -EB-> f
-               (l === f && r === f && output === f) ||
+               (el === f && er === f && output === f) ||
                // l -EB-> t
                // ----------------
                // and(l,r) -EB-> t
-               (l === t && output === t) ||
+               (el === t && output === t) ||
                // r -EB-> t
                // ----------------
                // and(l,r) -EB-> t
-               (r === t && output === t)
+               (er === t && output === t)
             )
       })
       ||
@@ -975,21 +997,25 @@ func evalBoolean (input: Term, output: Term) -> Goal {
       delayed(freshn{v in
         let l = v ["l"]
         let r = v ["r"]
+        let el = v ["el"]
+        let er = v ["er"]
         return
             (input === implies(l, r)) &&
+            evalBoolean(input:l, output: el) &&
+            evalBoolean(input:r, output: er) &&
             (
                // l -EB-> t, r -EB-> f
                // --------------------
                // and(l,r) -EB-> f
-               (l === t && r === f && output === f) ||
+               (el === t && er === f && output === f) ||
                // l -EB-> f
                // ----------------
                // and(l,r) -EB-> t
-               (l === f && output === t) ||
+               (el === f && output === t) ||
                // l -EB-> t, r -EB-> t
                // --------------------
                // and(l,r) -EB-> t
-               (l === t && r === t && output === t)
+               (el === t && er === t && output === t)
             )
       })
 }
